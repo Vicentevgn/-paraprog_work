@@ -1,0 +1,116 @@
+diagnostico(Paciente, amigdalite) :-
+sintoma(Paciente,dor_de_garganta),
+sintoma(Paciente,dificuldade_para_engolir),
+sintoma(Paciente,febre),
+sintoma(Paciente,ganglios_inchados),
+sintoma(Paciente,manchas_nas_amigdalas).
+
+diagnostico(Paciente,gripe_comum) :-
+sintoma(Paciente,dor_de_cabeca),
+sintoma(Paciente,espirros),
+sintoma(Paciente,dor_de_garganta),
+sintoma(Paciente,nariz_escorrendo),
+sintoma(Paciente,arrepios).
+
+diagnostico(Paciente, alergia) :-
+sintoma(Paciente, coceira_nos_olhos),
+sintoma(Paciente, espirros),
+sintoma(Paciente, congestao_nasal),
+sintoma(Paciente, tosse).
+
+diagnostico(Paciente,resfriado) :-
+sintoma(Paciente,tosse),
+sintoma(Paciente,espirros),
+sintoma(Paciente,nariz_escorrendo).
+
+diagnostico(Paciente, gripe_A) :-
+sintoma(Paciente,febre),
+sintoma(Paciente,dor_de_cabeca),
+sintoma(Paciente,dor_corporal),
+sintoma(Paciente,fadiga),
+sintoma(Paciente,arrepios),
+sintoma(Paciente,dor_de_garganta),
+sintoma(Paciente,nariz_escorrendo),
+sintoma(Paciente,tosse).
+
+diagnostico(Paciente,caxumba) :-
+sintoma(Paciente,febre),
+sintoma(Paciente,glandulas_inchadas).
+
+diagnostico(Paciente,catapora) :-
+sintoma(Paciente,febre),
+sintoma(Paciente,arrepios),
+sintoma(Paciente,dor_corporal),
+sintoma(Paciente,irritacao_na_pele).
+
+consulta :-
+write('Qual e o seu nome? '),
+read(Paciente),get_single_char(Codigo),
+diagnostico(Paciente,Doenca),
+escreve_lista([Paciente,',voce provavelmente tem ',Doenca,'.']),nl.
+
+consulta :-
+write('Perdao, nao fui capaz de diagnosticar'),nl,
+write('o que voce tem.'),nl.
+
+sintoma(Paciente,febre) :- 
+verifica(Paciente," tem febre (s/n) ?").
+sintoma(Paciente,dificuldade_para_engolir) :- 
+verifica(Paciente," tem dificuldade para engolir (s/n) ?").
+sintoma(Paciente,ganglios_inchados) :-
+verifica(Paciente," tem ganglios inchados (s/n) ?").
+sintoma(Paciente, manchas_nas_amigdalas) :-
+verifica(Paciente," tem manchas nas amigdalas (s/n) ?").
+sintoma(Paciente,coceira_nos_olhos) :-
+verifica(Paciente," tem coceira nos olhos (s/n) ?").
+sintoma(Paciente,congestao_nasal) :-
+verifica(Paciente," tem congestao nasal (s/n) ?").
+sintoma(Paciente,irritacao_na_pele) :-
+verifica(Paciente," tem irritacao na pele (s/n) ?").
+sintoma(Paciente,dor_de_cabeca) :- 
+verifica(Paciente," tem dor de cabeca (s/n) ?").
+sintoma(Paciente,nariz_escorrendo) :- 
+verifica(Paciente," tem nariz escorrendo (s/n) ?").
+sintoma(Paciente,fadiga) :- 
+verifica(Paciente," tem fadiga (s/n) ?").
+sintoma(Paciente,tosse) :- 
+verifica(Paciente," tem tosse (s/n) ?").
+sintoma(Paciente,dor_corporal) :- 
+verifica(Paciente," tem dor corporal (s/n) ?").
+sintoma(Paciente,arrepios) :- 
+verifica(Paciente," tem arrepios (s/n) ?").
+sintoma(Paciente,dor_de_garganta) :- 
+verifica(Paciente," tem dor de garganta (s/n) ?").
+sintoma(Paciente,espirros) :- 
+verifica(Paciente," tem espirros (s/n) ?").
+sintoma(Paciente,glandulas_inchadas) :- 
+verifica(Paciente," tem glandulas inchadas (s/n) ?").
+
+proposicao(Paciente,Pergunta) :-
+  write(Paciente),write(', voce'),write(Pergunta),
+  read(R),
+  ( (R == sim ; R == s)
+      ->
+       assert(sim(Pergunta)) ;
+       assert(no(Pergunta)), fail).
+
+:- dynamic sim/1,no/1.		
+
+verifica(P,S) :-
+   (sim(S) -> true ;
+    (no(S) -> fail ;
+     proposicao(P,S))).
+
+undo :- retract(sim(_)),fail. 
+undo :- retract(no(_)),fail.
+undo.
+
+escreve_lista([]).
+escreve_lista([Termo| Termos]) :-
+write(Termo),
+escreve_lista(Termos).
+
+response(Resposta) :-
+get_single_char(Codigo),
+put_code(Codigo), nl,
+char_code(Resposta, Codigo).
